@@ -1,0 +1,48 @@
+{
+  "name": "glossa",
+  "version": "0.11.0",
+  "description": "AI-native translation management by Meter. Push any translation file (JSON, xcstrings, strings.xml, PO, XLIFF, ARB and formats Glossa learns), let Claude translate it with your glossary and rules, review a shared task queue, audit a locale and pull the files back, from the conversation, the CLI or CI.",
+  "author": {
+    "name": "Meter",
+    "email": "jonathan@getglossa.dev",
+    "url": "https://meterapp.co"
+  },
+  "homepage": "https://getglossa.dev/docs?ref=plugin",
+  "repository": "https://github.com/MeterApp/glossa-plugins",
+  "license": "MIT",
+  "keywords": [
+    "localization",
+    "i18n",
+    "translation",
+    "l10n",
+    "xcstrings",
+    "xliff",
+    "mcp",
+    "crowdin-alternative"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Glossa",
+    "shortDescription": "Translate app strings with AI",
+    "longDescription": "Push your app's translation files in any format and Glossa translates them with Claude, using your glossary and prompt rules. Identical strings across files and apps share one translation. Work the review queue, ask how a locale is doing, teach Glossa a new file format, and pull finished files back, from chat, the CLI or CI.",
+    "developerName": "Meter",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://getglossa.dev",
+    "defaultPrompt": [
+      "Translate locales/en.json into Spanish and German with Glossa.",
+      "Work through my open Glossa review tasks.",
+      "How is our Japanese? Run a Glossa audit."
+    ],
+    "brandColor": "#4F46E5",
+    "composerIcon": "./assets/logo.svg",
+    "logo": "./assets/logo.svg",
+    "supportURL": "https://getglossa.dev/docs?ref=plugin",
+    "privacyPolicyURL": "https://getglossa.dev/privacy?ref=plugin",
+    "termsOfServiceURL": "https://getglossa.dev/terms?ref=plugin"
+  }
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Glossa">
+  <rect width="64" height="64" rx="14" fill="#4F46E5"/>
+  <path d="M15 20h20a5 5 0 0 1 5 5v9a5 5 0 0 1-5 5H26l-7 6v-6h-4a5 5 0 0 1-5-5v-9a5 5 0 0 1 5-5z" fill="#fff"/>
+  <path d="M42 27h7a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5h-2v5l-6-5h-8a5 5 0 0 1-4.6-3H35a7 7 0 0 0 7-7z" fill="#C7D2FE"/>
+  <text x="25" y="34" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#4F46E5">Aa</text>
+</svg>

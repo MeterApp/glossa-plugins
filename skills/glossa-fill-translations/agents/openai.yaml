@@ -1,0 +1,13 @@
+interface:
+  display_name: "Glossa Fill Translations"
+  short_description: "Translate missing strings with the codebase in view"
+  default_prompt: "Use $glossa-fill-translations to translate every missing Spanish string in our Glossa project, reading how each key is used in this repository first."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "glossa"
+      description: "Glossa hosted MCP server"
+      transport: "streamable_http"
+      url: "https://getglossa.dev/api/mcp"
+policy:
+  allow_implicit_invocation: true

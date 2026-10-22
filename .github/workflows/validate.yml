@@ -1,0 +1,59 @@
+name: Validate plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "29 15 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  structure:
+    name: Structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate repository structure
+        run: python3 scripts/validate_repo.py
+
+  clients:
+    name: Install in each client
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Claude Code accepts the manifests
+        run: |
+          npm install --global @anthropic-ai/claude-code
+          claude plugin validate . --strict
+          claude plugin validate .claude-plugin/plugin.json --strict
+      - name: Codex installs the plugin by name
+        run: |
+          npm install --global @openai/codex
+          CODEX_HOME="$(mktemp -d)"
+          export CODEX_HOME
+          codex plugin marketplace add . --json
+          codex plugin list --available --json | tee /tmp/codex-plugins.json
+          grep -q '"pluginId": "glossa@glossa"' /tmp/codex-plugins.json
+          codex plugin add glossa@glossa --json
+      - name: The skills CLI discovers every skill
+        run: |
+          npx -y skills@latest add . --list 2>&1 | tee /tmp/skills.txt
+          for skill in glossa glossa-review-queue glossa-audit glossa-formats glossa-setup; do
+            grep -q "$skill" /tmp/skills.txt || { echo "missing skill: $skill" >&2; exit 1; }
+          done

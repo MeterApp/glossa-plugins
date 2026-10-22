@@ -1,0 +1,13 @@
+interface:
+  display_name: "Glossa Billing"
+  short_description: "Prices, plans and buying a subscription"
+  default_prompt: "Use $glossa-billing to show our Glossa plan and usage, recommend a plan, and give me a checkout link."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "glossa"
+      description: "Glossa hosted MCP server"
+      transport: "streamable_http"
+      url: "https://getglossa.dev/api/mcp"
+policy:
+  allow_implicit_invocation: true

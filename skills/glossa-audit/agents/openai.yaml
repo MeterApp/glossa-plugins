@@ -1,0 +1,13 @@
+interface:
+  display_name: "Glossa Audit"
+  short_description: "Audit a locale and apply the fixes"
+  default_prompt: "Use $glossa-audit to audit our Spanish translations against the code that uses them, fix the clear problems and propose rules for the recurring ones."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "glossa"
+      description: "Glossa hosted MCP server"
+      transport: "streamable_http"
+      url: "https://getglossa.dev/api/mcp"
+policy:
+  allow_implicit_invocation: true

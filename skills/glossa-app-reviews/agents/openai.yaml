@@ -1,0 +1,13 @@
+interface:
+  display_name: "Glossa App Reviews"
+  short_description: "Store app reviews per language and write copy from them"
+  default_prompt: "Use $glossa-app-reviews to import our latest App Store and Google Play reviews into Glossa and use what German users say to improve our German store listing."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "glossa"
+      description: "Glossa hosted MCP server"
+      transport: "streamable_http"
+      url: "https://getglossa.dev/api/mcp"
+policy:
+  allow_implicit_invocation: true

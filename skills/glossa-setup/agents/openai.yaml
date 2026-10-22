@@ -1,0 +1,6 @@
+interface:
+  display_name: "Glossa Setup"
+  short_description: "Connect MCP, the CLI and CI"
+  default_prompt: "Use $glossa-setup to connect Glossa to this project and add a GitHub Actions workflow that pushes and pulls translations."
+policy:
+  allow_implicit_invocation: true

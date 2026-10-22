@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "glossa": {
+      "type": "http",
+      "url": "https://getglossa.dev/api/mcp",
+      "headers": {
+        "X-Glossa-Integration": "plugin"
+      }
+    },
+    "glossa-catalog": {
+      "type": "http",
+      "url": "https://getglossa.dev/api/mcp/catalog",
+      "headers": {
+        "X-Glossa-Integration": "plugin"
+      }
+    }
+  }
+}

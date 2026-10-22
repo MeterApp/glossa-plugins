@@ -1,0 +1,18 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "glossa",
+  "owner": {
+    "name": "Meter",
+    "email": "jonathan@getglossa.dev",
+    "url": "https://meterapp.co"
+  },
+  "description": "Glossa by Meter: AI-native translation management for agents, apps and CI.",
+  "plugins": [
+    {
+      "name": "glossa",
+      "source": "./",
+      "description": "Eight skills plus the hosted Glossa MCP servers: push translation files in any format, translate with Claude using your glossary and rules, rip through the review queue, audit a locale, teach Glossa new formats, and wire it into CI.",
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+interface:
+  display_name: "Glossa Formats"
+  short_description: "Teach Glossa a new file format"
+  default_prompt: "Use $glossa-formats to teach Glossa this translation file format, validate the template and push the file again."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "glossa"
+      description: "Glossa hosted MCP server"
+      transport: "streamable_http"
+      url: "https://getglossa.dev/api/mcp"
+policy:
+  allow_implicit_invocation: true
