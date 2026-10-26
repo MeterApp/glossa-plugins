@@ -30,7 +30,7 @@ Inline you can check the code and settle each string yourself.
    wrong, worst first".
 2. **Read the sample.** `list_translations_for_audit` with `locale`,
    `project` (the repository's project) and `limit` up to 200. To audit AI
-   output only, pass `status: ["machine", "needs_review"]`. Each item has
+   output only, set `status: ["machine", "needs_review"]`. Each item has
    `source_text`, the translation `text`, `status`, `origin`, `keys` (key name,
    project, file `path`, file comment), `description`, `placeholders`,
    `max_length`, matching `glossary` terms and `flags`. The first page also

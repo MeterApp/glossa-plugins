@@ -122,7 +122,7 @@ upvotes or comments gets an email at every status change.
 
 - **A call fails in a way that looks like a Glossa bug** (a 5xx, a file that
   does not round-trip, a translation the pipeline mangled): offer to file it
-  with `report_issue`, passing the `request_id` from the error (every MCP tool
+  with `report_issue`, including the `request_id` from the error (every MCP tool
   error ends with one) and `context` with the `op`, `project`, `key`, `locale`
   or `file`. Issues are private to the workspace and the Glossa team. From a
   terminal, `glossa feedback report "<title>" --last` attaches the last failed

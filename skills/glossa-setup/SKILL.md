@@ -72,8 +72,14 @@ npx @meterapp/glossa mcp
 
 ## CI: keep translations in sync
 
-Store a workspace key as the repository secret `GLOSSA_API_KEY`; the CLI reads
-it from the environment variable of the same name.
+Create a workspace key for CI and store it in the repository's secret store
+as `GLOSSA_API_KEY`. In the workflow, map that secret into the job's
+environment under the same name (an `env:` entry on the job): the CLI looks
+for it there. The plugin never reads it; only the CI runner does. The
+[CLI docs](https://getglossa.dev/docs/cli?ref=plugin#ci) show the complete
+mapping, and the
+[release gate recipes](https://getglossa.dev/docs/release-gate?ref=plugin#recipes)
+show deploy and check workflows.
 
 ```yaml
 name: Translations
@@ -88,8 +94,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      GLOSSA_API_KEY: ${{ secrets.GLOSSA_API_KEY }}
+    # env: map the GLOSSA_API_KEY repository secret here (see the CLI docs)
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5

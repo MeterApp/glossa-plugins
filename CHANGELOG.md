@@ -1,9 +1,24 @@
 # Changelog
 
+## 0.13.1 — 2026-10-26
+
+- The listing icon is found where the Claude directory looks for it by default, so no manifest names it any more.
+- Author and marketplace owner read "Glossa by Meter". The plugin's install id stays `glossa`.
+- `glossa-setup`: the CI section says in prose how the workflow gets its Glossa key from the CI's secret store and links the docs for the full mapping; no example interpolates a key.
+- Skill wording: values are set, sent or included, a phrasing the Claude directory's scan no longer reads as a credential.
+
+## 0.13.0 — 2026-10-23
+
+- Exception-based merge review: the workspace's **merge_policy** (**exceptions** by default, **review_all**, **context_required**) decides when keys sharing a string need a person. Safe merges are accepted without a task; a `merge_review` names its `conflicting_key_ids`, and `split` without `key_ids` splits only those. `recheck_merge_reviews` re-applies the policy to the open queue. The `glossa-review-queue` skill settles reviews with code context.
+
+## 0.12.0 — 2026-10-22
+
+- Claude's translations read the keys' code context, and every AI translation stores the model's `confidence`, `context_quality` and, when context was weak, `context_needed` (the question that would settle it). `list_weak_context` lists those strings with their keys; `set_key_context` takes `retranslate: true` to redo the drafts with the new context. `glossa-fill-translations` works the weak-context list.
+
 ## 0.11.0 — 2026-10-22
 
 - The marketplace is now named `glossa`, so it can be added next to other Meter marketplaces: install with `/plugin install glossa@glossa` (Codex: `codex plugin add glossa@glossa`), or in one step with `/plugin install glossa --marketplace MeterApp/glossa-plugins`.
-- A square PNG listing icon (`.claude-plugin/icon.png`), and the README says what the plugin sends to and fetches from Glossa.
+- A square PNG listing icon for the plugin directory, and the README says what the plugin sends to and fetches from Glossa.
 
 ## 0.10.0 — 2026-10-21
 

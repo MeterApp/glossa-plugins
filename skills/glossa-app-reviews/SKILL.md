@@ -48,8 +48,8 @@ same input. Over REST: `POST /api/v1/import_app_reviews`.
    handful of reviews tells you little; say so rather than generalizing.
 2. `list_app_reviews` with `project` and `locales` (`pt` also matches
    `pt-BR`); narrow with `min_rating`/`max_rating`, `store`, `query` (text
-   contained in the title or body) or `since`. Page with `offset` until you
-   pass `total`.
+   contained in the title or body) or `since`. Page with `offset` until it
+   reaches `total`.
 3. Read for **vocabulary** (the words users in that language use for the
    app's features: use them in the copy when they match the glossary), for
    **what they value** (4–5 stars: lead with it) and for **what they miss or

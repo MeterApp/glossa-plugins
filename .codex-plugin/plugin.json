@@ -1,9 +1,9 @@
 {
   "name": "glossa",
-  "version": "0.11.0",
+  "version": "0.13.1",
   "description": "AI-native translation management by Meter. Push any translation file (JSON, xcstrings, strings.xml, PO, XLIFF, ARB and formats Glossa learns), let Claude translate it with your glossary and rules, review a shared task queue, audit a locale and pull the files back, from the conversation, the CLI or CI.",
   "author": {
-    "name": "Meter",
+    "name": "Glossa by Meter",
     "email": "jonathan@getglossa.dev",
     "url": "https://meterapp.co"
   },
@@ -26,7 +26,7 @@
     "displayName": "Glossa",
     "shortDescription": "Translate app strings with AI",
     "longDescription": "Push your app's translation files in any format and Glossa translates them with Claude, using your glossary and prompt rules. Identical strings across files and apps share one translation. Work the review queue, ask how a locale is doing, teach Glossa a new file format, and pull finished files back, from chat, the CLI or CI.",
-    "developerName": "Meter",
+    "developerName": "Glossa by Meter",
     "category": "Developer Tools",
     "capabilities": [
       "Read",

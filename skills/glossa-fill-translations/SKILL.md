@@ -1,6 +1,6 @@
 ---
 name: glossa-fill-translations
-description: Translate a Glossa project's missing strings yourself, with the whole codebase as context, instead of leaving them to AI auto-translation — list_missing_translations for the worklist (keys, file paths, glossary, rules), find where each key is used in the repository, record it with set_key_context, translate, and write back with submit_translations; also switching a project to translation_mode agent. Use for "fill the missing translations", "translate the new strings using the code", "let my agent translate instead of auto-translate", "add code context"; do not use for pushing or pulling files (glossa), working review tasks (glossa-review-queue) or audits (glossa-audit).
+description: Translate a Glossa project's missing strings yourself, with the whole codebase as context, instead of leaving them to AI auto-translation — list_missing_translations for the worklist (keys, file paths, glossary, rules), find where each key is used in the repository, record it with set_key_context, translate, and write back with submit_translations; also fixing translations the AI wrote without enough context (list_weak_context) and switching a project to translation_mode agent. Use for "fill the missing translations", "translate the new strings using the code", "let my agent translate instead of auto-translate", "add code context", "fix weak-context translations"; do not use for pushing or pulling files (glossa), working review tasks (glossa-review-queue) or audits (glossa-audit).
 ---
 
 # Filling missing translations from the codebase
@@ -41,7 +41,7 @@ the AI would.
    see what changed),
    `description`, `placeholders`, `max_length`, matching `glossary` terms and the
    `translations` it already has in other locales. The first page also returns
-   `context`: the product context and prompt rules that apply (pass `project` for a
+   `context`: the product context and prompt rules that apply (set `project` for a
    project with its own `product_context`; its context and rules replace the
    workspace's). `total_units` is what is left.
 3. **Read the code.** For each unit, search the repository for its key names
@@ -54,8 +54,9 @@ the AI would.
    site with a few lines of code around it, what the string is (`button`,
    `status`, `label`, `title`…), the screen, and a note when the meaning is not
    obvious ("the fare state while the taximeter is paused"). Glossa keeps it on
-   the key for later agents, reviewers and Glossa's own translation and merge
-   checks. Each key comes back `strong` (call site plus role, screen or
+   the key: the AI's translations, later agents and reviewers all read it, and
+   it is what decides whether keys that share an English text may share a
+   translation. Each key comes back `strong` (call site plus role, screen or
    note), `weak` or `missing`; aim for strong. Never paste secrets or
    credentials from the code into an excerpt.
 5. **Translate.** Follow the glossary exactly (`do_not_translate` terms stay as
@@ -73,7 +74,7 @@ the AI would.
    for wordings you are sure of; send an item with `status: "needs_review"`
    when you are not, which opens a `translation_review` task for a person.
    The default `overwrite: "machine"` also replaces AI drafts but never
-   reviewed, approved or imported work; do not pass `overwrite: "all"` unless
+   reviewed, approved or imported work; do not set `overwrite: "all"` unless
    the person asked to redo human work.
 7. **Fix what was rejected.** The result lists `rejected` items (placeholder
    mismatch, unknown unit) and `skipped` ones (already translated). Correct the
@@ -83,6 +84,19 @@ the AI would.
 9. **Report and pull.** Say how many strings and locales you filled, what you
    flagged for review and why, then pull the files (`pull_file`, or the
    `glossa` skill) if the person wants them in the repository.
+
+## Translations written without enough context
+
+Every AI translation carries the model's `confidence` and `context_quality`
+(`strong`, `weak`, `missing`); when context was weak it also says in
+`context_needed` what would settle it ("Is 'Charge' a button or the fee on the
+receipt?"). `list_weak_context` (`project`, `locales`) lists those strings,
+drafts only by default, with every key, its file path and the context already
+recorded. Work it like the missing list: find each key in the code, answer the
+question with `set_key_context`, and set `retranslate: true` so Claude redoes
+the drafts with the new context (ai projects). In an agent project nothing is
+queued: the result's `retranslate_units` are yours to translate again with
+`submit_translations`. Reviewed and approved translations are never redone.
 
 ## When the string itself is the problem
 

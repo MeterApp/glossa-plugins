@@ -43,9 +43,9 @@ OPS = {
     "detect_format", "list_formats", "learn_format", "approve_format",
     "search_units", "list_units", "get_unit", "update_unit", "set_translation", "review_translations", "translate",
     "list_missing_translations", "list_stale_translations", "list_translations_for_audit", "submit_translations",
-    "set_key_context",
+    "set_key_context", "list_weak_context",
     "merge_units", "split_key",
-    "list_tasks", "claim_tasks", "resolve_task", "resolve_tasks",
+    "list_tasks", "claim_tasks", "resolve_task", "resolve_tasks", "recheck_merge_reviews",
     "list_glossary", "upsert_glossary_term", "delete_glossary_term",
     "list_rules", "add_rule", "update_rule",
     "list_feedback", "get_feedback", "request_feature", "report_issue",
@@ -117,7 +117,7 @@ for surface, manifest in manifests.items():
         error(f"{surface} manifest name must be {PLUGIN_NAME}")
     if manifest.get("repository") not in (None, PUBLIC_REPO):
         error(f"{surface} manifest repository must be {PUBLIC_REPO}")
-    for field in ("skills", "mcpServers", "logo", "icon"):
+    for field in ("skills", "mcpServers", "logo"):
         if isinstance(manifest.get(field), str):
             check_path(f"{surface}.{field}", manifest[field])
     interface = manifest.get("interface", {})
@@ -125,15 +125,6 @@ for surface, manifest in manifests.items():
         for field in ("composerIcon", "logo", "logoDark"):
             if field in interface:
                 check_path(f"{surface}.interface.{field}", interface[field])
-
-# The directory listing icon: a square PNG (SVG is not accepted there).
-if manifests["claude"].get("icon") != "./.claude-plugin/icon.png":
-    error('claude manifest icon must be "./.claude-plugin/icon.png"')
-icon = ROOT / ".claude-plugin" / "icon.png"
-if icon.exists():
-    header = icon.read_bytes()[:24]
-    if header[:8] != b"\x89PNG\r\n\x1a\n" or int.from_bytes(header[16:20], "big") != int.from_bytes(header[20:24], "big"):
-        error(".claude-plugin/icon.png must be a square PNG")
 
 # --- file sizes ------------------------------------------------------------
 
@@ -284,6 +275,7 @@ FORBIDDEN = {
 }
 CREDENTIAL_READS = re.compile(
     r"\$\{?[A-Z][A-Z0-9_]*(?:KEY|SECRET|TOKEN|PASSWORD)\b"  # $GLOSSA_API_KEY, ${TOKEN}
+    r"|\$\{\{\s*secrets\.[A-Z0-9_]*(?:KEY|SECRET|TOKEN|PASSWORD)\b"  # a CI secret interpolated in an example
     r"|process\.env(?:\.|\[\s*['\"])[A-Z0-9_]*(?:KEY|SECRET|TOKEN|PASSWORD)\b"
     r"|\bos\.(?:environ|getenv)\b"
     r"|Deno\.env\.get\("

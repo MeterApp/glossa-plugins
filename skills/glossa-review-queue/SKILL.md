@@ -47,6 +47,28 @@ Split (`split_key`) / do not merge when:
 - One occurrence has placeholders, plural forms or markup the other lacks.
 - The key's file comment or description says the context differs.
 
+### What reaches the queue: merge_policy
+
+The workspace's **merge_policy** (`get_workspace`) decides when a shared string
+becomes a `merge_review`. With **exceptions** (default), clearly safe merges are
+accepted silently, and a review opens only for a suspected conflict: code
+context with different UI roles (priority 3), different comments (2), or an
+ambiguous short label like "Charge", "Pending" or "Stop" (1). The payload's
+`conflicting_key_ids` names the keys that differ, and `hint` says why.
+
+- Settle a review with evidence: read each key's call site in the code (or
+  its `code_context` in the payload). If they play the same role, record it
+  with `set_key_context` and `keep_merged`. If they differ, `split` with no
+  `key_ids`: only the conflicting keys get their own string, and the rest stay
+  merged and keep sharing one translation. Split translations are redone with
+  their own context.
+- After changing **merge_policy** or recording context for many keys, run
+  `recheck_merge_reviews` (dry run first, then `dry_run: false`) to close the
+  reviews the policy no longer files.
+- Never change **merge_policy** without the person: **context_required** keeps
+  new keys apart (more strings to translate), and **review_all** brings back
+  every shared short label.
+
 `merge_review` asks whether keys **already auto-merged** should stay together;
 `merge_suggestion` proposes merging **near-duplicate** units. For
 `merge_suggestion`, choose the better source wording as the survivor and check
