@@ -16,18 +16,6 @@ permissions:
   contents: read
 
 jobs:
-  structure:
-    name: Structure
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - name: Validate repository structure
-        run: python3 scripts/validate_repo.py
-
   clients:
     name: Install in each client
     runs-on: ubuntu-latest
@@ -42,6 +30,7 @@ jobs:
           npm install --global @anthropic-ai/claude-code
           claude plugin validate . --strict
           claude plugin validate .claude-plugin/plugin.json --strict
+          claude plugin validate . --strict --profile directory
       - name: Codex installs the plugin by name
         run: |
           npm install --global @openai/codex

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.13.2 — 2026-10-26
+
+- The plugin ships no scripts: the structure validator runs in Glossa's own repository before every publish, and this repository's CI runs `claude plugin validate`, including the directory profile.
+- No file names a credential environment variable any more. `glossa-setup` links the CLI docs for the variable a CI job maps its Glossa key secret to.
+
 ## 0.13.1 — 2026-10-26
 
 - The listing icon is found where the Claude directory looks for it by default, so no manifest names it any more.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "glossa",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "AI-native translation management by Meter. Push any translation file (JSON, xcstrings, strings.xml, PO, XLIFF, ARB and formats Glossa learns), let Claude translate it with your glossary and rules, review a shared task queue, audit a locale and pull the files back, from the conversation, the CLI or CI.",
   "author": {
     "name": "Glossa by Meter",

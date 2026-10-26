@@ -25,7 +25,7 @@ The marketplace `source` is `"./"`: the repository is the plugin.
 
 - **Manifest versions move together.** All four `plugin.json` files carry the
   same `version`, and `CHANGELOG.md` gains a `## <version> ` heading in the same
-  commit. `scripts/validate_repo.py` fails otherwise.
+  commit. The validator fails otherwise.
 - **Op names are exact.** Skills name ops exactly as the server registers them
   (`push_file`, `claim_tasks`, `run_audit`, …). The validator rejects a
   backticked snake_case name that is not a known op; add new ops to `OPS` in
@@ -44,8 +44,13 @@ The marketplace `source` is `"./"`: the repository is the plugin.
   Code's copy of the server sends, as `X-Api-Key`, next to
   `X-Glossa-Integration: plugin`. `.mcp.json` stays OAuth-only.
 - **Nothing reads a credential from the user's machine**, not even in an
-  example: no `$…_KEY` in commands, no `process.env.…KEY` in code. CI examples
-  take keys from the CI's secret store. The validator enforces it.
+  example: no shell or code reference to a credential environment variable,
+  and no file here names one. CI guidance links the docs for the secret
+  mapping. The validator enforces it.
+- **No scripts ship.** The structure validator lives in the private source
+  repository (it has to name credential patterns to reject them, and the
+  Claude directory's scan reads a shipped script that names them as
+  forwarding the installer's key).
 
 ## Safety
 
@@ -57,9 +62,13 @@ The marketplace `source` is `"./"`: the repository is the plugin.
 
 ## Validation
 
+Structure, manifests, op names and links are checked in the source
+repository on every PR, before anything is published here. In this
+directory:
+
 ```bash
-python3 scripts/validate_repo.py
 claude plugin validate . --strict
+claude plugin validate . --strict --profile directory
 CODEX_HOME="$(mktemp -d)" codex plugin marketplace add . --json
 npx -y skills@latest add . --list
 ```
