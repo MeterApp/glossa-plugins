@@ -37,6 +37,10 @@ task until a template is approved.
 
 ## Good to know
 
+- A `push_file` that fails with `422 unreadable_file` is a supported format
+  with a syntax error, not an unknown format: fix the line `errors` names
+  (a trailing comma, an unclosed tag, an unterminated string) and push again.
+  Nothing was imported or removed. Do not `learn_format` a broken file.
 - Approved templates are reused for every later file that matches, in every
   project of the workspace.
 - A format that many teams need becomes a built-in parser in a later release;

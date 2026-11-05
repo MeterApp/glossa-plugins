@@ -61,7 +61,10 @@ Decisions the AI is unsure about become **tasks** in a review queue.
 4. **Check**: `get_stats` for coverage per locale; `search_units` or
    `list_units` (filter by locale or status) to find strings; `get_unit` shows
    the source, every key that uses it, and all translations with history.
-   Fix one with `set_translation`; mark checked ones with `review_translations`.
+   Fix one with `set_translation`; for a plural string (`get_unit` shows the
+   unit's `plural`) send its forms in `plural`, every category the locale needs (es: one,
+   other; ru: one, few, many, other), also in a `resolve_task` edit. Mark
+   checked ones with `review_translations`.
 5. **Pull**: `pull_file` with `project`, `path` and `locale` returns the file in
    its own format, layout and comments preserved. Write it to the path the
    project uses for that locale, then show the person `git diff`.

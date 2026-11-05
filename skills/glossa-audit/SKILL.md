@@ -16,6 +16,11 @@ There are two ways to audit a locale. Pick by what you can see.
   `glossary_suggestion` tasks for a person to decide. Use it only from a chat
   with no repository, or when the person asks for it by name.
 
+Prefer the inline audit: it uses no AI credits and has no limit. `run_audit`
+is limited per calendar month on every plan (Free 3, Cloud 30, Enterprise
+300; `get_pricing` has the current numbers and `get_account` shows
+`usage.ai_audits` with `resets_at`).
+
 `run_audit` cannot tell whether "Open" is a button or a status, or what a
 fragment like "and {count} more" is joined to. It files a task for each
 guess, so on a large workspace the queue fills faster than anyone works it.
@@ -86,8 +91,14 @@ Inline you can check the code and settle each string yourself.
 ## `run_audit` (no codebase)
 
 1. `list_audits` to see whether a recent audit already answers the question.
-2. `run_audit` with `locale` and a `question`. An audit uses AI on the
-   workspace's account: run one per question, not one per idea.
+2. `get_account` and check `usage.ai_audits`: if none are left, say so and
+   offer the inline audit instead. Then `run_audit` with `locale` and a
+   `question`. An audit uses AI on the workspace's account and counts
+   against the plan's monthly audits: run one per question, not one per idea.
+   A `402 audit_limit` error names the plan, the limit, the date it resets
+   and the upgrade (`create_checkout_link` gives a human the link); relay
+   it, never buy a plan on your own, and audit inline if the codebase can be
+   opened.
 3. Follow the returned job with `get_job` until `done`; then `get_audit` for
    the score, summary and findings.
 4. Resolve its tasks with judgment (`glossa-review-queue`): apply an

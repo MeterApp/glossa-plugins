@@ -61,7 +61,9 @@ ambiguous short label like "Charge", "Pending" or "Stop" (1). The payload's
   with `set_key_context` and `keep_merged`. If they differ, `split` with no
   `key_ids`: only the conflicting keys get their own string, and the rest stay
   merged and keep sharing one translation. Split translations are redone with
-  their own context.
+  their own context (AI credits); add `retranslate: false` to keep the copied
+  translations instead, e.g. in agent translation mode, then correct them with
+  `set_translation` or `submit_translations`.
 - After changing **merge_policy** or recording context for many keys, run
   `recheck_merge_reviews` (dry run first, then `dry_run: false`) to close the
   reviews the policy no longer files.

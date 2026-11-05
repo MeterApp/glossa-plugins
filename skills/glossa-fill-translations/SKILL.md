@@ -87,8 +87,9 @@ the AI would.
 
 ## Translations written without enough context
 
-Every AI translation carries the model's `confidence` and `context_quality`
-(`strong`, `weak`, `missing`); when context was weak it also says in
+Every AI translation carries the model's `context_quality` (`strong`, `weak`,
+`missing`) and, when the model flagged it as unsure, its `confidence` (null
+means it was not flagged); when context was weak it also says in
 `context_needed` what would settle it ("Is 'Charge' a button or the fee on the
 receipt?"). `list_weak_context` (`project`, `locales`) lists those strings,
 drafts only by default, with every key, its file path and the context already

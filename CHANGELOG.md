@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.16.1 — 2026-11-05
+
+- The plugin ships no binary file. The Claude directory's scan cannot read a PNG, so the listing icon the plugin carried showed up as a gap in the scan's inventory of what the plugin ships (INVENTORY_GAPS); the directory took the icon at the first submission and ignores the file afterwards, so it is gone. Every file in the plugin is UTF-8 text.
+
+## 0.16.0 — 2026-10-30
+
+- AI audits (`run_audit`) have a monthly limit on every plan (Free 3, Cloud 30, Enterprise 300; `limits.ai_audits_per_month` in `get_pricing`, `usage.ai_audits` in `get_account`). Past it `run_audit` returns `402 audit_limit` with the reset date and the upgrade. `glossa-audit` prefers the inline agent audit, which is free and unlimited, and checks the count before a `run_audit`; `glossa-billing` explains the limit.
+
+## 0.15.0 — 2026-10-28
+
+- `glossa-billing` estimates a translation before it runs (`estimate_translation`: AI-translated words and strings per locale against this month's budget) and manages the workspace's AI budget (`get_ai_budget`, `set_ai_budget`: a monthly word cap, alerts at 50/80/100% and keep, queue or agent at the cap). A translate held by the budget returns `held`; a push returns `translate_held`.
+
+## 0.14.0 — 2026-10-28
+
+- New pricing: Free, Cloud and Enterprise, metered in AI-translated words (source words × locales, once per string and language). Hosting, edits, reviews, retries and reused strings are free. `glossa-billing` reads `included.ai_words_per_month` and `usage.ai_words`, and buys `cloud` (the old `pro` and `team` names still work).
+
 ## 0.13.2 — 2026-10-26
 
 - The plugin ships no scripts: the structure validator runs in Glossa's own repository before every publish, and this repository's CI runs `claude plugin validate`, including the directory profile.

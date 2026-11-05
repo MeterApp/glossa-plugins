@@ -1,6 +1,6 @@
 ---
 name: glossa-billing
-description: Check Glossa plans and prices, see the workspace's plan and monthly usage, and buy, upgrade, switch or cancel a Glossa subscription — by giving the human a Stripe Checkout link, or by subscribing on the card already saved once they approve the price. Use for "how much is Glossa", "which plan do we need", "upgrade to Pro", "we ran out of translations", "cancel our plan", "send me the invoice link"; do not use for translating strings (glossa) or connecting the CLI and MCP (glossa-setup).
+description: Check Glossa plans and prices, see the workspace's plan and monthly usage, estimate what a translation will cost, set a monthly AI budget, and buy, upgrade, switch or cancel a Glossa subscription — by giving the human a Stripe Checkout link, or by subscribing on the card already saved once they approve the price. Use for "how much is Glossa", "which plan do we need", "how many words will this use", "cap our AI spend", "upgrade to Cloud", "we ran out of AI words", "cancel our plan", "send me the invoice link"; do not use for translating strings (glossa) or connecting the CLI and MCP (glossa-setup).
 ---
 
 # Glossa billing: prices, plans and buying one
@@ -15,16 +15,25 @@ handle card numbers: the human pays on Stripe.
 ## Prices (no account needed)
 
 `get_pricing` returns the pricing document every Meter product shares: each
-plan's `price` (`{monthly, yearly}` in USD), `included.ai_translations_per_month`,
-`limits` (`members`, `projects`; `null` is unlimited), `features`, `overage`
+plan's `price` (`{monthly, yearly}` in USD), `included.ai_words_per_month`,
+`limits` (`members`, `projects`, `ai_audits_per_month`; `null` is unlimited),
+`features`, `overage`
 and a `checkout_url`, plus `free_tier` and `how_to_buy`. It answers without a
 credential: the `glossa-catalog` MCP server, `GET https://getglossa.dev/api/v1/pricing`,
 or `npx @meterapp/glossa pricing --json`.
 
-- The unit is an **AI translation**: one source string translated into one
-  locale by Claude. Imports, reviews and human or agent edits are free.
-- Free, Pro and Team have every feature; they differ in AI translations a
-  month and in members and projects. Yearly is two months free.
+- The unit is an **AI-translated word**: the source words of a string the
+  first time Claude translates it into a locale (words × locales). Hosting
+  (any number of strings, apps and languages), imports, exports, human and
+  agent edits, reviews, retries and retranslations of the same text are
+  free, and a string several keys or apps share is translated and counted
+  once.
+- Free and Cloud have every feature; they differ in AI-translated words a
+  month, in members (Free 3, Cloud unlimited) and in AI audits a month
+  (`run_audit`; Free 3, Cloud 30, Enterprise 300). Agent audits
+  (`list_translations_for_audit`, the `glossa-audit` skill) are free and
+  unlimited on every plan. Yearly is two months free.
+  The old plan names `pro` and `team` are accepted and mean `cloud`.
 - Enterprise is sold by email; it is not purchasable through the API.
 
 Always quote prices from `get_pricing`, never from memory: they can change.
@@ -32,26 +41,67 @@ Always quote prices from `get_pricing`, never from memory: they can change.
 ## Which plan
 
 1. `get_account` shows the workspace, the current plan, status, renewal date,
-   usage this calendar month against every limit (`usage.ai_translations.used`
-   of `included`, members, projects), what `remaining` is, and `next_tier`:
+   usage this calendar month (`usage.ai_words.used` of `included`;
+   `usage.ai_translations.used`, the strings translated for the first time;
+   `usage.reused_strings`, keys that cost nothing because they share a
+   translation; members, projects; `usage.ai_audits`, run_audit calls against
+   the plan's limit with `resets_at`), what `remaining` is, and `next_tier`:
    what the next plan adds, its price and a `checkout_url`. (`get_billing` has
-   the same plan and usage plus whether a card is saved.) Limits are reported,
-   not enforced: nothing stops at the limit yet.
-2. Estimate the need: new strings a month × target locales ≈ AI translations
-   a month (`get_stats` has unit and locale counts). Recommend the smallest
-   plan that covers it with some headroom, and say the number you used.
+   the same plan and usage plus whether a card is saved.) The AI-word
+   allowance is reported, not enforced, and nothing is charged automatically
+   past it. The one enforced limit is AI audits: past it `run_audit` fails
+   with `402 audit_limit`. `ai_budget` in both is the workspace's own budget (below).
+2. Estimate the need: words in new or changed source strings a month ×
+   target locales ≈ AI-translated words a month (`get_stats` has unit and
+   locale counts; UI strings average about 8 words). Free covers small apps;
+   recommend Cloud past that, and Enterprise (email) when the estimate is far
+   above Cloud's allowance. Say the numbers you used.
+
+## Before a large translation: estimate it
+
+`estimate_translation` with a `project` (or none, for the whole workspace),
+optional `locales` (default: the project's target locales) and optional
+`units` returns exactly what `translate` would bill: `words` (AI-translated
+words) and `translations` (string × locale pairs translated for the first
+time), per locale, plus `usage` this month, the `budget`, `after` (the month
+after translating, `over_cap`, `over_allowance`) and `would_hold`. Existing AI
+drafts, reviewed, imported and human translations cost nothing. CLI:
+`npx @meterapp/glossa estimate --project app --locale es,fr`. Tell the human
+the number before a push or translate that would pass the cap.
+
+## The AI budget
+
+- `get_ai_budget` (also `ai_budget` in `get_account` and `get_billing`): the
+  `cap` (the budget's `monthly_words`, else the plan's included words),
+  `used`, `remaining`, `percent`, `alert` (the highest of 50/80/100 crossed),
+  `at_limit`, `at_cap`, `held_jobs` and a `message`. When `message` is set,
+  relay it to the human.
+- `set_ai_budget` (owners and admins), only with numbers a human gave you:
+  `monthly_words` (null: the plan's allowance), `alerts` (percentages,
+  default `[50, 80, 100]`), `at_limit`:
+  - `keep`: keep translating; usage is only reported.
+  - `queue`: a new translate job that would pass the cap is queued until the
+    1st of next month (UTC). `translate` returns `held` with the reason, a
+    push returns `translate_held`, and `glossa sync` reports it instead of
+    waiting. Raising the cap or leaving `queue` releases held jobs
+    (`released_jobs`). Work that bills nothing never waits.
+  - `agent`: at the cap, the dashboard asks an admin to switch AI projects to
+    agent mode; nothing switches by itself. You can offer to translate with
+    `list_missing_translations` and `submit_translations` (the `glossa`
+    skill), which uses no AI words.
+- Alerts are in-app and in these fields only; Glossa sends no budget email.
 
 ## Buying or changing a plan
 
-Ask the human first, with the plan, interval and price ("Pro, yearly, $490 a
-year"). Then:
+Ask the human first, with the plan, interval and price ("Cloud, yearly, $490
+a year"). Then:
 
 - **Default — a link for the human.** `create_checkout_link` with `plan`
-  (`pro` or `team`) and `interval` (`month` or `year`) returns `{url, kind,
+  (`cloud`) and `interval` (`month` or `year`) returns `{url, kind,
   amount_cents, expires_at}`. Give the human the URL (or open it in their
   browser if you can). Nothing is charged until they pay in Stripe Checkout.
   `kind: plan_change` means they already subscribe and the page confirms the
-  change. CLI: `npx @meterapp/glossa upgrade --plan pro --yearly --open`.
+  change. CLI: `npx @meterapp/glossa upgrade --plan cloud --yearly --open`.
 - **No account yet.** `create_checkout_link` works without a credential (the
   `glossa-catalog` server, REST with no key, or `glossa upgrade` before
   `glossa login`). The human pays first, then signs in to Glossa with any
