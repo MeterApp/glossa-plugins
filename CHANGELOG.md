@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.1 — 2026-11-05
+
+- The listing icon is back in the plugin (a 1024 px square PNG rendered from the logo) and the Claude Code manifest names it with `icon`, together with `privacyPolicyUrl`, `termsOfServiceUrl` and `supportUrl`. Anthropic's directory reads those five fields from `plugin.json` for the listing and looks nowhere else; without them the listing had no icon and the directory warned about the missing privacy URL. Claude Code ignores the fields at load time and `claude plugin validate` accepts them. The directory's scan accepts complete PNG images, so the icon no longer counts as a gap in its inventory. 0.16.1 and 0.17.0 had removed them.
+
 ## 0.17.0 — 2026-11-05
 
 - Sign-in is OAuth only on every host. The Claude Code plugin no longer has an API key option or sends a key header; its MCP servers are the same as `.mcp.json`. If you saved a key in the plugin before, Claude Code stops sending it: open `/mcp`, choose `plugin:glossa:glossa` and sign in with your browser. On a machine without a browser, run `npx @meterapp/glossa login --no-browser` or add the server yourself as the [MCP docs](https://getglossa.dev/docs/mcp?ref=plugin#manual) show. Keys for scripts and CI are unchanged.
