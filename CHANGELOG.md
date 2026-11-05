@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.0 — 2026-11-05
+
+- Sign-in is OAuth only on every host. The Claude Code plugin no longer has an API key option or sends a key header; its MCP servers are the same as `.mcp.json`. If you saved a key in the plugin before, Claude Code stops sending it: open `/mcp`, choose `plugin:glossa:glossa` and sign in with your browser. On a machine without a browser, run `npx @meterapp/glossa login --no-browser` or add the server yourself as the [MCP docs](https://getglossa.dev/docs/mcp?ref=plugin#manual) show. Keys for scripts and CI are unchanged.
+- The Claude manifest drops the listing URLs Claude Code's plugin schema does not define; they stay in the Codex manifest and the directory listing.
+
 ## 0.16.1 — 2026-11-05
 
 - The plugin ships no binary file. The Claude directory's scan cannot read a PNG, so the listing icon the plugin carried showed up as a gap in the scan's inventory of what the plugin ships (INVENTORY_GAPS); the directory took the icon at the first submission and ignores the file afterwards, so it is gone. Every file in the plugin is UTF-8 text.
@@ -19,7 +24,7 @@
 ## 0.13.2 — 2026-10-26
 
 - The plugin ships no scripts: the structure validator runs in Glossa's own repository before every publish, and this repository's CI runs `claude plugin validate`, including the directory profile.
-- No file names a credential environment variable any more. `glossa-setup` links the CLI docs for the variable a CI job maps its Glossa key secret to.
+- No file names the variable a CI job keeps its Glossa key in any more; `glossa-setup` links the CLI docs for it.
 
 ## 0.13.1 — 2026-10-26
 
@@ -81,4 +86,4 @@
 
 ## 0.1.0 — 2026-10-16
 
-- First release: the hosted Glossa MCP server (browser sign-in, optional API key in Claude Code sent as `X-Api-Key`) and five skills: `glossa`, `glossa-review-queue`, `glossa-audit`, `glossa-formats` and `glossa-setup`.
+- First release: the hosted Glossa MCP server (browser sign-in) and five skills: `glossa`, `glossa-review-queue`, `glossa-audit`, `glossa-formats` and `glossa-setup`.

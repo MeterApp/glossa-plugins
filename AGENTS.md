@@ -11,7 +11,7 @@ Everything here is customer- and agent-visible.
 | Path | Consumed by |
 | --- | --- |
 | `.claude-plugin/marketplace.json` | `/plugin marketplace add MeterApp/glossa-plugins` |
-| `.claude-plugin/plugin.json` | `/plugin install glossa@glossa`; directory listing URLs, the optional `api_key` option and Claude Code's copy of the MCP server (replaces the `.mcp.json` entry of the same name) |
+| `.claude-plugin/plugin.json` | `/plugin install glossa@glossa`; Claude Code's copy of the MCP servers, identical to `.mcp.json`; listing URLs live in `.codex-plugin` and the directory listing |
 | `.agents/plugins/marketplace.json` | `codex plugin marketplace add MeterApp/glossa-plugins` |
 | `.codex-plugin/plugin.json` | `codex plugin add glossa@glossa` (and the Codex listing) |
 | `.cursor-plugin/plugin.json` | Cursor |
@@ -38,15 +38,13 @@ The marketplace `source` is `"./"`: the repository is the plugin.
   *and* when not to.
 - **`agents/openai.yaml` stays in sync with its skill.** Skills that call MCP
   tools declare the `glossa` MCP dependency; `glossa-setup` does not.
-- **OAuth by default, no embedded credentials.** No MCP configuration sets an
-  `Authorization` header (it would disable Claude Code's OAuth sign-in). The one
-  key the plugin takes is the optional, `sensitive` `api_key`, which only Claude
-  Code's copy of the server sends, as `X-Api-Key`, next to
-  `X-Glossa-Integration: plugin`. `.mcp.json` stays OAuth-only.
-- **Nothing reads a credential from the user's machine**, not even in an
-  example: no shell or code reference to a credential environment variable,
-  and no file here names one. CI guidance links the docs for the secret
-  mapping. The validator enforces it.
+- **OAuth only; the plugin does no authentication.** Every MCP entry is a URL
+  plus `X-Glossa-Integration: plugin`; the host signs the person in with their
+  browser from the server's 401 challenge. No `userConfig`, no `Authorization`
+  or key header, and the Claude manifest's `mcpServers` equal `.mcp.json`.
+- **No file shows a key being read**, not even in an example or a sentence
+  that denies it. Keys are created in the dashboard and kept as CI secrets;
+  skills link the docs for how code and CI load them. The validator enforces it.
 - **No scripts ship.** The structure validator lives in the private source
   repository (it has to name credential patterns to reject them, and the
   Claude directory's scan reads a shipped script that names them as

@@ -1,6 +1,6 @@
 ---
 name: glossa-setup
-description: Connect an agent, IDE or CI pipeline to Glossa and fix it when the tools do not appear — the hosted MCP server with browser sign-in, the optional API key in Claude Code's plugin options, manual MCP setup in Codex, Cursor and other hosts, the CLI (npx @meterapp/glossa login with browser sign-in, glossa mcp over stdio), creating and revoking API keys, and running glossa push and pull in GitHub Actions. Use for setup, keys, CI and 401 troubleshooting; do not use for translation work once connected (glossa).
+description: Connect an agent, IDE or CI pipeline to Glossa and fix it when the tools do not appear — the hosted MCP server with browser sign-in, manual MCP setup in Codex, Cursor and other hosts, the CLI (npx @meterapp/glossa login with browser sign-in, glossa mcp over stdio), creating and revoking API keys, and running glossa push and pull in GitHub Actions. Use for setup, keys, CI and 401 troubleshooting; do not use for translation work once connected (glossa).
 ---
 
 # Connecting to Glossa
@@ -13,21 +13,17 @@ Every Glossa op is available three ways with the same names and inputs:
 
 ## Plugin installs: sign in with your browser
 
-The plugin configures the hosted server as `glossa`. No key is needed: in
-Claude Code open `/mcp`, choose `plugin:glossa:glossa` and authenticate, then
-approve access to your workspace in the browser. Codex and Cursor sign in
-from their MCP connection settings.
+The plugin configures the hosted server as `glossa` and does no authentication
+itself. Use any tool: the agent opens a Glossa sign-in in the browser and
+keeps the connection; the person approves access to their workspace there. In
+Claude Code, `/mcp` shows the connection (`plugin:glossa:glossa`) and signs in
+again if needed. Codex, Cursor and the Claude and ChatGPT apps sign in the
+same way from their connector settings.
 
-**Or save an API key (Claude Code).** For a machine with no browser, the plugin
-takes an optional **Glossa API key**: open `/plugin`, select Glossa, choose
-**Configure options**, paste a `gls_…` key and restart. Claude Code keeps it in
-the system credential store and sends it only to the Glossa server as the
-`X-Api-Key` header; left empty, browser sign-in applies. The person enters the
-key there themselves: never ask for a key in the conversation, and never copy
-one from environment files or another tool's config.
-
-The plugin never sets an `Authorization` header: a configured one would turn
-off OAuth sign-in in Claude Code.
+On a machine without a browser, use the CLI sign-in below with `--no-browser`,
+or let the person add the server themselves as the
+[MCP docs](https://getglossa.dev/docs/mcp?ref=plugin#manual) show. Never ask
+for a key in the conversation.
 
 ## CLI sign-in
 
@@ -61,8 +57,9 @@ claude mcp add --transport http glossa https://getglossa.dev/api/mcp
 ```
 
 Then `/mcp` → authenticate. Other hosts (`.cursor/mcp.json`, Codex
-`config.toml`, Claude Desktop) take the same URL as an HTTP server; hosts
-without OAuth send the key as `Authorization: Bearer gls_…`.
+`config.toml`, Claude Desktop) take the same URL as an HTTP server; for a host
+without OAuth, the [MCP docs](https://getglossa.dev/docs/mcp?ref=plugin#manual)
+show how the person connects it with their own key.
 
 Local stdio server (uses the key the CLI is configured with):
 

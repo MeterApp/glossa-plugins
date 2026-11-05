@@ -54,13 +54,14 @@ npx skills add MeterApp/glossa-plugins
 
 ### Then sign in
 
-Open `/mcp` in Claude Code, select `plugin:glossa:glossa` and authenticate in
-your browser; Codex and Cursor sign in from their MCP settings. No API key or
-environment variable is required. On a machine without a browser, Claude Code
-offers an optional **Glossa API key** field (`/plugin` → Glossa → Configure
-options): paste a key from [the dashboard](https://getglossa.dev/dashboard?ref=plugin).
-It is kept in your system's secure credential store and sent only to the Glossa
-MCP server.
+Install the plugin, then use any tool: your agent opens a Glossa sign-in in the
+browser and keeps the connection. In Claude Code, `/mcp` shows the connection
+(`plugin:glossa:glossa`) and signs in again if needed. Codex, Cursor and the
+Claude and ChatGPT apps sign in the same way from their connector settings.
+For scripts, CI and the SDK, create an API key in
+[the dashboard](https://getglossa.dev/dashboard?ref=plugin) and keep it as a
+secret in that environment; the plugin never uses it. On a machine without a
+browser, see the [manual setup](https://getglossa.dev/docs/mcp?ref=plugin#manual).
 
 ## What it sends and fetches
 
@@ -79,8 +80,8 @@ when the task you asked for calls for it.
   fetches public plans and prices and creates a Stripe Checkout link for a
   human to pay. It sends only the plan and billing interval you choose.
 
-Requests carry an `X-Glossa-Integration: plugin` header for attribution, and,
-only if you set one, your optional API key in `X-Api-Key`. Nothing is charged
+Requests carry an `X-Glossa-Integration: plugin` header for attribution and the
+sign-in your host holds; the plugin adds nothing else. Nothing is charged
 without a human: paid plans start in Stripe Checkout or after you approve the
 exact plan and price. See the [privacy policy](https://getglossa.dev/privacy?ref=plugin)
 and [terms](https://getglossa.dev/terms?ref=plugin).
