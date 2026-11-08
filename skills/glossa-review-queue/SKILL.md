@@ -17,8 +17,10 @@ most of them in seconds; the queue is designed for that.
    Claims expire; finish or release what you claim. `audit_finding` and
    `translation_review` tasks whose translation changed since they were filed
    are closed as stale on claim (`stale_closed`), so you only see live ones.
-3. For each task read its `payload` (and `get_unit` for the units it names)
-   and decide with the rules below. Send the batch's decisions in one
+3. For each task read its `payload` and `keys` (the project, key and file
+   path where a task's string is used, so you can open that code) and decide
+   with the rules below; `get_unit` only when you need the other locales or
+   the history. Send the batch's decisions in one
    `resolve_tasks` call (up to 50: `{ decisions: [{ task, action, note, … }] }`;
    `resolve_task` for a single one). Each `note` says what you decided and
    **why in one sentence**. A failing decision does not stop the others: check

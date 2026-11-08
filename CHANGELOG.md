@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.2 — 2026-11-08
+
+- The plugin ships only file types the Claude plugin directory accepts from organizations that are not Verified: the SVG logo is gone, and Codex and Cursor show the same PNG logo as the directory listing. No skill, tool or sign-in change.
+
 ## 0.17.1 — 2026-11-05
 
 - The listing icon is back in the plugin (a 1024 px square PNG rendered from the logo) and the Claude Code manifest names it with `icon`, together with `privacyPolicyUrl`, `termsOfServiceUrl` and `supportUrl`. Anthropic's directory reads those five fields from `plugin.json` for the listing and looks nowhere else; without them the listing had no icon and the directory warned about the missing privacy URL. Claude Code ignores the fields at load time and `claude plugin validate` accepts them. The directory's scan accepts complete PNG images, so the icon no longer counts as a gap in its inventory. 0.16.1 and 0.17.0 had removed them.

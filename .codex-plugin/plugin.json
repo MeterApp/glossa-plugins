@@ -1,6 +1,6 @@
 {
   "name": "glossa",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "description": "AI-native translation management by Meter. Push any translation file (JSON, xcstrings, strings.xml, PO, XLIFF, ARB and formats Glossa learns), let Claude translate it with your glossary and rules, review a shared task queue, audit a locale and pull the files back, from the conversation, the CLI or CI.",
   "author": {
     "name": "Glossa by Meter",
@@ -39,8 +39,8 @@
       "How is our Japanese? Run a Glossa audit."
     ],
     "brandColor": "#4F46E5",
-    "composerIcon": "./assets/logo.svg",
-    "logo": "./assets/logo.svg",
+    "composerIcon": "./.claude-plugin/icon.png",
+    "logo": "./.claude-plugin/icon.png",
     "supportURL": "https://getglossa.dev/docs?ref=plugin",
     "privacyPolicyURL": "https://getglossa.dev/privacy?ref=plugin",
     "termsOfServiceURL": "https://getglossa.dev/terms?ref=plugin"
